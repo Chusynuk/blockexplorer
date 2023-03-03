@@ -58,12 +58,13 @@ function App() {
       <Container>
         <Wrapper>
           <div className="App">Block Number: {blockDetails?.number}</div>
+          <br />
+          <p>Click to display block transactions:</p>
           <Block onClick={handleToggleBlockTransactions}>{blockDetails?.number}</Block>
           <br />
-          <span>
+          <p>
             <b>Parent hash:</b> {blockDetails?.parentHash}
-          </span>
-          <br />
+          </p>
           <b>Block transactions:</b>
           <br />
           {blockTransactions
@@ -78,16 +79,17 @@ function App() {
         </Wrapper>
         <div>
           <p>
-            <b>Transaction hash: {singleTransactionInfo?.transactionHash}</b>
+            <b>Transaction hash:</b> {singleTransactionInfo?.transactionHash}
           </p>
           <p>
-            <b>From: {singleTransactionInfo?.from}</b>
+            <b>From:</b> {singleTransactionInfo?.from}
           </p>
           <p>
-            <b>To: {singleTransactionInfo?.to}</b>
+            <b>To:</b> {singleTransactionInfo?.to}
           </p>
           <p>
-            <b>Confirmations: {singleTransactionInfo?.confirmations}</b>
+            <b>Confirmations: </b>
+            {singleTransactionInfo?.confirmations}
           </p>
         </div>
       </Container>

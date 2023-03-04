@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alchemy, Network } from 'alchemy-sdk';
-import { Button, Typography } from '@web3uikit/core';
-import { Block, Container, Wrapper, TransactionsWrapper } from './components';
+import { Button, Typography, Input } from '@web3uikit/core';
+import { Container, Wrapper, TransactionsWrapper } from './components';
 import './App.css';
 
 const settings = {
@@ -16,6 +16,7 @@ function App() {
   const [blockTransactions, toggleBlockTransactions] = useState(false);
   const [blockDetails, setBlockDetails] = useState();
   const [singleTransactionInfo, setSingleTransactionInfo] = useState();
+  const [requestHash, setRequestHash] = useState('');
   const [balance, setBalance] = useState('');
 
   useEffect(() => {
@@ -44,18 +45,18 @@ function App() {
       .then(setSingleTransactionInfo);
   };
 
-  const handleBalance = async () => {
-    const balance = await alchemy.core.getBalance('vitalik.eth');
-
-    return balance;
+  const handleInputValue = (e: React.ChangeEvent) => {
+    setRequestHash(e.target.value);
   };
-  handleBalance().then((balance) => setBalance(balance.toString()));
-  // console.log('singleTransactionInfo', singleTransactionInfo);
+
+  const handleBalance = async () => {
+    await alchemy.core.getBalance(requestHash).then((balance) => setBalance(balance.toString()));
+  };
+
   return (
     <React.Fragment>
       <Container>
         <Wrapper>
-          {balance}
           <Typography variant="h3">Block Number: {blockDetails?.number}</Typography>
           <br />
           <p>Click to display block transactions:</p>
@@ -103,6 +104,11 @@ function App() {
             {singleTransactionInfo?.confirmations}
           </p>
         </div>
+        <br />
+        <Input type="text" label="type hash to see balance" value="" onChange={handleInputValue} />
+        <br />
+        <Button text="Click to see balace :)" onClick={handleBalance} />
+        {balance}
       </Container>
     </React.Fragment>
   );

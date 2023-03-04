@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
+  background-color: cornsilk;
   position: relative;
   flex-direction: column;
   align-items: center;

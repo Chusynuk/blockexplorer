@@ -1,22 +1,14 @@
-import { Alchemy, Network } from 'alchemy-sdk';
 import React, { useEffect, useState } from 'react';
+import { Alchemy, Network } from 'alchemy-sdk';
+import { Button, Typography } from '@web3uikit/core';
 import { Block, Container, Wrapper, TransactionsWrapper } from './components';
-
 import './App.css';
 
-// Refer to the README doc for more information about using API
-// keys in client-side code. You should never do this in production
-// level code.
 const settings = {
   apiKey: process.env.REACT_APP_ALCHEMY_API_KEY,
   network: Network.ETH_MAINNET,
 };
 
-// In this week's lessons we used ethers.js. Here we are using the
-// Alchemy SDK is an umbrella library with several different packages.
-//
-// You can read more about the packages here:
-//   https://docs.alchemy.com/reference/alchemy-sdk-api-surface-overview#api-surface
 const alchemy = new Alchemy(settings);
 
 function App() {
@@ -24,6 +16,7 @@ function App() {
   const [blockTransactions, toggleBlockTransactions] = useState(false);
   const [blockDetails, setBlockDetails] = useState();
   const [singleTransactionInfo, setSingleTransactionInfo] = useState();
+  const [balance, setBalance] = useState('');
 
   useEffect(() => {
     async function getBlockNumber() {
@@ -51,16 +44,29 @@ function App() {
       .then(setSingleTransactionInfo);
   };
 
-  console.log('singleTransactionInfo', singleTransactionInfo);
+  const handleBalance = async () => {
+    const balance = await alchemy.core.getBalance('vitalik.eth');
 
+    return balance;
+  };
+  handleBalance().then((balance) => setBalance(balance.toString()));
+  // console.log('singleTransactionInfo', singleTransactionInfo);
   return (
     <React.Fragment>
       <Container>
         <Wrapper>
-          <div className="App">Block Number: {blockDetails?.number}</div>
+          {balance}
+          <Typography variant="h3">Block Number: {blockDetails?.number}</Typography>
           <br />
           <p>Click to display block transactions:</p>
-          <Block onClick={handleToggleBlockTransactions}>{blockDetails?.number}</Block>
+          <Button
+            type="button"
+            size="regular"
+            theme="primary"
+            text={blockDetails?.number}
+            onClick={handleToggleBlockTransactions}
+            style={{ minHeight: '30px' }}
+          />
           <br />
           <p>
             <b>Parent hash:</b> {blockDetails?.parentHash}
@@ -71,7 +77,11 @@ function App() {
             ? blockDetails?.transactions?.map((item, index) => {
                 return (
                   <TransactionsWrapper key={index}>
-                    <button onClick={() => handleTransactionInfo(index)}>{item}</button>
+                    <Button
+                      text={item}
+                      theme="tertiary"
+                      onClick={() => handleTransactionInfo(index)}
+                    />
                   </TransactionsWrapper>
                 );
               })
@@ -79,16 +89,17 @@ function App() {
         </Wrapper>
         <div>
           <p>
-            <b>Transaction hash:</b> {singleTransactionInfo?.transactionHash}
+            <Typography variant="subtitle2">Transaction hash:</Typography>{' '}
+            {singleTransactionInfo?.transactionHash}
           </p>
           <p>
-            <b>From:</b> {singleTransactionInfo?.from}
+            <Typography variant="subtitle2">From:</Typography> {singleTransactionInfo?.from}
           </p>
           <p>
-            <b>To:</b> {singleTransactionInfo?.to}
+            <Typography variant="subtitle2">To:</Typography> {singleTransactionInfo?.to}
           </p>
           <p>
-            <b>Confirmations: </b>
+            <Typography variant="subtitle2">Confirmations: </Typography>
             {singleTransactionInfo?.confirmations}
           </p>
         </div>

@@ -2,14 +2,14 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   background-color: cornsilk;
-  position: relative;
+  position: absolute;
   flex-direction: column;
   align-items: center;
-  /* width: 100vw;
-  height: 100vh; */
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
-  top: 20px;
+  align-items: center;
 `;
 
 export default Container;
